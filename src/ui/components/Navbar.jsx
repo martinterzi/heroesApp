@@ -1,11 +1,16 @@
 import { useNavigate, Link, NavLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../../features/auth/authSlice';
 
 
 export const Navbar = () => {
-
+    const { user } = useSelector(state => state.auth)
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onLogout = () => {
+        localStorage.removeItem('user')
+        dispatch( logout() )
         navigate('/login',{
             replace: true
         })
@@ -38,13 +43,19 @@ export const Navbar = () => {
                     >
                         DC
                     </NavLink>
+                    <NavLink 
+                        className= {({isActive}) =>  `nav-item nav-link ${ isActive ? 'active':'' }` }
+                        to="/search"
+                    >
+                        Search
+                    </NavLink>
                 </div>
             </div>
 
             <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 d-flex justify-content-end">
                 <ul className="navbar-nav ml-auto">
                   <span className='nav-item nav-link text-primary'>
-                    Martin
+                    { user.name }
                   </span>
                   <button className='nav-item nav-link btn'
                           onClick={onLogout}>
